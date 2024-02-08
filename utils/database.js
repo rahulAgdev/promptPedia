@@ -10,6 +10,7 @@ export const connectToDB = async () => {
     }
 
     try {
+        // console.log("The execution is reaching here at try of database.")
         await mongoose.connect(process.env.MONGODB_URI, {
             dbName: 'share_promt',
             useNewUrlParser: true,

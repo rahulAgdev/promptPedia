@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { connectToDB } from "@utils/database";
 
 import User from "@models/user";
-
+// console.log("Before nextauth configuration.")
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -11,35 +11,45 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  async session({ session }) {
-    const sessionUser = await User.findOne({
-        email: session.user.email,
-
-    })
-    session.user.id = sessionUser._id.toString();
-    return session;
-  },
-  async signIn({ profile }) {
-    try {
-      await connectToDB(); 
-      // check if a user already exist
-      const userExists = await User.findOne({
-        email: profile.email,
-      });
-      // if not, create a new user
-      if (!userExists) {
-        await User.create({
+  callbacks: {
+    async session({ session }) {
+      const sessionUser = await User.findOne({
+          email: session.user.email,
+  
+      })
+      session.user.id = sessionUser._id.toString();
+      return session;
+    },
+    async signIn({ profile }) {
+      // console.log("In the sign In function?")
+      try {
+        // console.log("Calling database pre");
+        await connectToDB(); 
+        // console.log("Calling database post");
+        // check if a user already exist
+        const userExists = await User.findOne({
           email: profile.email,
-          username: profile.name.replace(" ", "").toLowerCase(),
-          image: profile.picture,
         });
+        // console.log("Here below userexist declaration.")
+        // if not, create a new user
+        if (!userExists) {
+          // console.log("Here above trying to create a new user.")
+          await User.create({
+            email: profile.email,
+            username: profile.name.replace(" ", "").toLowerCase(),
+            image: profile.picture,
+          });
+        }
+        // console.log("here before returning from the sign in funciton.");
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
       }
-      return true;
-    } catch (error) {
-      console.log(error);
-      return false;
-    }
-  },
+    },
+  }
+  
 });
+// console.log("After nextauth configuration")
 
 export { handler as GET, handler as POST };
