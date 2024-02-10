@@ -29,6 +29,7 @@ const Form = ({type, post, setPost, submitting, handleSubmit}) => {
           <span className="font-satoshi font-semibold text-base text-gray-700">Tag
           {` `}<span className="font-normal text-gray-500">(#product, #webdev, #idea)</span>
           </span>
+          
           <input 
             value={post.tag}
             onChange={(e)=> setPost({...post, tag: e.target.value})}
@@ -37,6 +38,7 @@ const Form = ({type, post, setPost, submitting, handleSubmit}) => {
             className="form_input"
           />
         </label>
+        <span className="font-medium text-gray-400 mt-0 blue_gradient"> No need to add the # symbol in the tags.</span>
         <div className="flex-end mx-3 mb-5 gap-4">
           <Link href='/' className="text-gray-500 text-sm ">
             Cancel

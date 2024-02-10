@@ -8,7 +8,9 @@ import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 
 const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete}) => {
-
+  const {data:session} = useSession();
+  const pathName = usePathname();
+  const router = useRouter();
   const [copied, setCopied] = useState('');
   const handleCopy = () => {
     setCopied(post.prompt);
@@ -20,10 +22,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete}) => {
     <div className='prompt_card'>
       <div className='flex justify-between items-start gap-5'>
         <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
-          {/* {console.log("post : " ,post)}
-          {console.log("post?.creator:" , post?.creator)}
-          {console.log("post?.creator.image: ", post?.creator.image)} */}
-          {/* {console.log(post)} */}
+          
           <Image 
             src={post?.creator?.image}
             alt='user_image'
@@ -52,8 +51,18 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete}) => {
         {post.prompt}
       </p>
       <p className='font-inter text-sm blue_gradient cursor-pointer' onClick={()=>handleTagClick && handleTagClick}>
-        {post.tag}
+        #{post.tag}
       </p>
+      {session?.user.id === post.creator._id && pathName==='/profile' && (
+        <div className='mt-5 flex-center gap-4 border-t border-gray-100 pt-3'>
+          <p className='font-inter text-sm green_gradient cursor-pointer' onClick={handleEdit}>
+            edit
+          </p>
+          <p className='font-inter text-sm orange_gradient cursor-pointer' onClick={ handleDelete}>
+            Delete
+          </p>
+        </div>
+      )}
     </div>
   )
 }
