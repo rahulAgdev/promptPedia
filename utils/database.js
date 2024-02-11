@@ -11,6 +11,7 @@ export const connectToDB = async () => {
 
     try {
         // console.log("The execution is reaching here at try of database.")
+        // showing error : first argument should be string which is true.
         await mongoose.connect(process.env.MONGODB_URI, {
             dbName: 'share_prompt',
             useNewUrlParser: true,
